@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>인재양성과정 리더십 유형 테스트</title>
+  <style>
+    :root{--max-width:760px;--accent:#2b6cb0}
+    html,body{height:100%;margin:0}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans KR',-apple-system,Helvetica,Arial;display:flex;flex-direction:column;align-items:center;background:#f7fbff;color:#111}
+    .container{width:100%;max-width:var(--max-width);background:#fff;margin:18px;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(15,23,42,0.08)}
+    h1{font-size:1.25rem;margin:0 0 8px}
+    p.lead{margin:0 0 18px;color:#555;font-size:0.95rem}
+    form{display:flex;flex-direction:column;gap:14px}
+    .question{padding:12px;border-radius:8px;background:linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid #eef4fb}
+    .qtext{font-size:0.98rem;margin:0 0 8px}
+    .scale{display:flex;gap:8px;flex-wrap:wrap}
+    .scale label{flex:1 1 48%;min-width:50px;background:#eef6ff;border-radius:8px;padding:8px;text-align:center;cursor:pointer;border:1px solid transparent}
+    .scale input{display:none}
+    .scale input:checked + span{background:var(--accent);color:#fff;border-radius:8px;padding:8px;display:inline-block}
+    .scale span{display:inline-block;width:100%}
+    .btns{display:flex;gap:10px;justify-content:center;margin-top:8px}
+    button{background:var(--accent);color:#fff;border:none;padding:12px 16px;border-radius:10px;font-weight:600;cursor:pointer}
+    button.secondary{background:#e6eefc;color:#123;border-radius:10px}
+    footer{font-size:0.82rem;color:#666;text-align:center;padding:12px}
+    @media (min-width:640px){.scale label{flex:0 0 auto;width:64px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>인재양성과정 리더십 유형 테스트</h1>
+    <p class="lead">아래 각 문항에 대해 가장 가까운 숫자(1~5)를 선택하세요. 완료 후 결과는 새 창에서 표시됩니다. 모바일에 최적화되어 있습니다.</p>
+    <form id="leadershipTest">
+      <!-- Questions 1 - 40 -->
+      <!-- Group A: 1-10 Achiever -->
+      <div id="questions">
+      </div>
+      <div class="btns">
+        <button type="submit">결과 보기</button>
+        <button type="button" class="secondary" id="resetBtn">다시하기</button>
+      </div>
+    </form>
+  </div>
+  <footer>테스트 제작: 인재양성과정</footer>
+  <script>
+    // 질문 원문 배열 (사용자가 준 텍스트를 그대로 배열로 분리)
+    const questions = [
+"1. 나는 업무를 시작할 때 명확한 목표와 기한을 설정하려 한다.",
+"2. 당장 실행 가능한 방법을 우선적으로 찾는 편이다.",
+"3. 빠르게 결과를 만들어내는 것에 만족감을 느낀다.",
+"4. 실행력이 떨어지는 팀원에게 직접적인 피드백을 주는 것이 필요하다고 생각한다.",
+"5. 업무의 완성도보다 마감 내 결과물을 제출하는 것이 중요하다.",
+"6. 회의나 의사결정에서 빠르게 결론을 내는 것을 선호한다.",
+"7. 업무 중 팀원들에게 명확한 지시와 기대치를 전달하려 노력한다.",
+"8. 목표 달성을 위해 다소 무리한 추진도 감수하는 편이다.",
+"9. 문제가 생기면 감정보다 해결책을 먼저 찾는다.",
+"10. 내가 나서서 일을 진두지휘할 때 팀의 성과가 높아지는 경우가 많다.",
+"11. 나는 동료들과의 관계가 업무만큼 중요하다고 생각한다.",
+"12. 같이 일하는 사람들의 분위기나 감정을 민감하게 살핀다.",
+"13. 혼자보다 함께 일할 때 동기부여가 더 잘 된다.",
+"14. 갈등이 생겼을 때 감정적 충돌을 줄이기 위해 중재자 역할을 맡는다.",
+"15. 감사 인사나 격려의 말을 자주 전하는 편이다.",
+"16. 회의나 대화 중 사람들의 말하지 않은 뉘앙스까지 파악하려 한다.",
+"17. 갈등이 생기면 관계를 해치지 않도록 조심스럽게 접근한다.",
+"18. 팀의 소통 분위기를 부드럽게 만드는 데 신경을 쓴다.",
+"19. 팀 내 분위기나 팀원 간 관계를 더 좋게 만들기 위한 행동을 자주 한다.",
+"20. 팀원들이 편안하게 느끼도록 정서적 분위기를 조성하려 한다.",
+"21. 업무를 시작하기 전에 전체 흐름과 계획을 먼저 세운다.",
+"22. 장기 일정을 스스로 정리해두는 편이다.",
+"23. 갑작스러운 요청보다는 미리 계획된 일정 내 일을 선호한다.",
+"24. 업무의 우선순위를 정리해서 실천하려 노력한다.",
+"25. 어떤 일을 할 때 그 이유와 배경을 먼저 이해하려 한다.",
+"26. 일을 시작하기 전에 전체 구조와 흐름을 먼저 설계한다.",
+"27. 반복되는 문제를 시스템적으로 해결하려는 편이다.",
+"28. 회의나 업무 프로세스를 정형화하고 표준을 만드는 걸 선호한다.",
+"29. 팀원들이 업무를 혼란없이 따라올 수 있도록 체계를 만든다.",
+"30. 감에 의존하기보다는 데이터와 구조에 기반한 판단을 선호한다.",
+"31. 새로운 시도나 도전을 통해 배우는 데 가치를 둔다.",
+"32. 실수를 하더라도 그 안에서 배울 점을 찾으려고 한다.",
+"33. 실패보다 배움의 기회를 놓치는 것을 더 두려워한다.",
+"34. 반복적인 업무보다 배움이 있는 과제를 선호한다.",
+"35. 평소 다양한 정보나 지식에 호기심을 가지는 편이다.",
+"36. 팀원에게 바로 답을 주기보다는 스스로 생각해보도록 질문한다.",
+"37. 대화할 때 판단 없이 먼저 경청하려고 노력한다.",
+"38. 팀원 개개인의 성장 목표에 관심이 많다.",
+"39. 단기 성과보다 장기적 역량 개발을 중효하게 여긴다.",
+"40. [함께 성장하자]는 메시지를 자주 팀원에게 전달한다."
+    ];
+    // 동적 질문 생성
+    const qwrap = document.getElementById('questions');
+    questions.forEach((txt, idx) => {
+      const qi = document.createElement('div');
+      qi.className = 'question';
+      const qn = document.createElement('p'); qn.className='qtext'; qn.textContent = txt;
+      const scale = document.createElement('div'); scale.className='scale';
+      for (let v=1; v<=5; v++){
+        const id = `q${idx+1}_v${v}`;
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type='radio'; input.name=`q${idx+1}`; input.value = v; input.id = id;
+        if (v===3) input.defaultChecked = false; // not checked by default to force selection
+        const span = document.createElement('span'); span.textContent = v;
+        label.appendChild(input); label.appendChild(span);
+        scale.appendChild(label);
+      }
+      qi.appendChild(qn); qi.appendChild(scale);
+      qwrap.appendChild(qi);
+    });
+    // reset button
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('leadershipTest').reset();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+    // form submit -> 계산 후 새 창에 결과 출력
+    document.getElementById('leadershipTest').addEventListener('submit', function(e){
+      e.preventDefault();
+      // collect scores
+      const scores = [];
+      for (let i=1;i<=40;i++){
+        const val = document.querySelector(`input[name=q${i}]:checked`);
+        if (!val){
+          alert(`${i}번 문항에 답해 주세요.`);
+          val && val.scrollIntoView({behavior:'smooth',block:'center'});
+          return;
+        }
+        scores.push(Number(val.value));
+      }
+      const sum = (arr, s, e) => arr.slice(s-1,e).reduce((a,b)=>a+b,0);
+      const cat = {
+        Achiever: sum(scores,1,10),
+        Collaborator: sum(scores,11,20),
+        Planner: sum(scores,21,30),
+        Learner: sum(scores,31,40)
+      };
+      // ranking
+      const entries = Object.entries(cat).map(([k,v])=>({type:k,score:v}));
+      entries.sort((a,b)=>b.score-a.score);
+      const top = entries[0];
+      // open new window and write result page
+      const w = window.open('', '_blank');
+      if (!w) {
+        alert('팝업이 차단되었습니다. 브라우저 설정에서 팝업 허용 후 다시 시도해주세요.');
+        return;
+      }
+      const resultHTML = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>결과 - 인재양성과정 리더십 유형 테스트</title>
+      <style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans KR',Arial;margin:0;padding:18px;background:#f4fbff;color:#0b1726}
+      .card{max-width:760px;margin:12px auto;padding:18px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(13,26,48,0.08)}h1{margin:0 0 6px;font-size:1.2rem}
+      p.lead{color:#334155;margin:6px 0 16px}
+      .type{font-weight:800;font-size:1.1rem;color:#0b63a8;padding:12px;border-radius:10px;background:linear-gradient(90deg,#e8f4ff,#f8fcff);display:inline-block}
+      .rank{margin-top:14px}
+      .bar{height:12px;background:#e6eefc;border-radius:8px;overflow:hidden}
+      .bar > i{display:block;height:100%;background:linear-gradient(90deg,#2b6cb0,#5aa0ff)}
+      table{width:100%;border-collapse:collapse;margin-top:12px}
+      td,th{padding:8px;text-align:left;border-bottom:1px solid #f1f5f9}
+      .note{margin-top:12px;color:#475569;font-size:0.92rem}
+      button{margin-top:16px;padding:10px 14px;border-radius:10px;border:none;background:#0b63a8;color:#fff;font-weight:700}
+      </style></head><body>
+      <div class="card">
+        <h1>당신의 리더십 타입은?</h1>
+        <p class="lead">가장 높은 점수를 기준으로 당신의 우선 리더십 유형을 알려드립니다.</p>
+        <div class="type">${top.type} (점수: ${top.score})</div>
+        <div class="rank">
+          <h3 style="margin-top:12px;margin-bottom:6px">종합 순위</h3>
+          <table>
+            <thead><tr><th>순위</th><th>유형</th><th>점수</th><th>시각화</th></tr></thead>
+            <tbody>
+              ${entries.map((e,i)=>`<tr><td>${i+1}</td><td>${e.type}</td><td>${e.score}</td><td><div class="bar"><i style="width:${Math.round(e.score/10*100)}%"></i></div></td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <strong>간단 해석</strong>
+          <ul>
+            <li><strong>Achiever</strong>: 목표지향적이고 즉시 실행해 결과를 만들어내는 스타일.</li>
+            <li><strong>Collaborator</strong>: 관계중심, 팀 분위기와 소통을 중시하는 스타일.</li>
+            <li><strong>Planner</strong>: 계획적·체계적이며 프로세스와 시스템을 만드는 데 강한 스타일.</li>
+            <li><strong>Learner</strong>: 학습·성장 지향, 도전과 학습을 통해 팀 역량을 끌어올리는 스타일.</li>
+          </ul>
+        </div>
+        <button onclick="window.print()">결과 인쇄·저장</button>
+      </div>
+      </body></html>`;
+      w.document.open();
+      w.document.write(resultHTML);
+      w.document.close();
+    });
+  </script>
+</body>
+</html>
